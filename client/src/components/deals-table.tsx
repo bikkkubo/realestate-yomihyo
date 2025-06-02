@@ -85,7 +85,7 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
   }
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">
@@ -96,9 +96,9 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-h-[300px] flex flex-col">
         {deals.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
+          <div className="flex-1 flex items-center justify-center text-gray-500">
             <p>取引が見つかりません</p>
           </div>
         ) : (

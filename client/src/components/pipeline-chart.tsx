@@ -17,11 +17,11 @@ export default function PipelineChart({ data, type, title }: PipelineChartProps)
   const maxCount = Math.max(...Object.values(data), 1);
 
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="min-h-[300px] flex flex-col">
         <div className="space-y-3">
           {stageOrder.map((stage) => {
             const count = data[stage] || 0;
@@ -55,7 +55,7 @@ export default function PipelineChart({ data, type, title }: PipelineChartProps)
         </div>
         
         {totalDeals === 0 && (
-          <div className="text-center py-8 text-gray-500">
+          <div className="flex-1 flex items-center justify-center text-gray-500">
             <p>まだこのパイプラインに取引がありません</p>
           </div>
         )}
