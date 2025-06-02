@@ -268,108 +268,103 @@ export default function Dashboard() {
           </Card>
         </div>
 
-        {/* Main Pipeline View */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-          {/* Rental Pipeline */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Home className="h-6 w-6 text-blue-600" />
+        {/* NOTE: 各ブロックを縦に独立させる */}
+        <main className="space-y-10">
+          {/* パイプライン行 */}
+          <div className="grid gap-6 lg:grid-cols-2">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <Home className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900">賃貸パイプライン</h2>
+                    <p className="text-sm text-gray-500">{rentalDeals.length} 件のアクティブ取引</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-900">賃貸パイプライン</h2>
-                  <p className="text-sm text-gray-500">{rentalDeals.length} 件のアクティブ取引</p>
-                </div>
+                <Button onClick={() => openNewDealModal("RENTAL")} className="flex items-center space-x-2">
+                  <Plus className="h-4 w-4" />
+                  <span>新規賃貸</span>
+                </Button>
               </div>
-              <Button onClick={() => openNewDealModal("RENTAL")} className="flex items-center space-x-2">
-                <Plus className="h-4 w-4" />
-                <span>新規賃貸</span>
-              </Button>
+              <PipelineChart 
+                data={rentalDistribution || {}} 
+                type="RENTAL" 
+                title="ステージ分布" 
+              />
             </div>
 
-            <PipelineChart 
-              data={rentalDistribution || {}} 
-              type="RENTAL" 
-              title="ステージ分布" 
-            />
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                    <Building className="h-6 w-6 text-green-600" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold text-gray-900">売買パイプライン</h2>
+                    <p className="text-sm text-gray-500">{salesDeals.length} 件のアクティブ取引</p>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => openNewDealModal("SALES")} 
+                  className="flex items-center space-x-2 bg-green-600 hover:bg-green-700"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>新規売買</span>
+                </Button>
+              </div>
+              <PipelineChart 
+                data={salesDistribution || {}} 
+                type="SALES" 
+                title="ステージ分布" 
+              />
+            </div>
+          </div>
 
+          {/* 最近の取引行 */}
+          <div className="grid gap-6 lg:grid-cols-2">
             <DealsTable 
               deals={rentalDeals} 
               isLoading={dealsLoading}
               onRefresh={refetchDeals}
             />
-          </div>
-
-          {/* Sales Pipeline */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Building className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-900">売買パイプライン</h2>
-                  <p className="text-sm text-gray-500">{salesDeals.length} 件のアクティブ取引</p>
-                </div>
-              </div>
-              <Button 
-                onClick={() => openNewDealModal("SALES")} 
-                className="flex items-center space-x-2 bg-green-600 hover:bg-green-700"
-              >
-                <Plus className="h-4 w-4" />
-                <span>新規売買</span>
-              </Button>
-            </div>
-
-            <PipelineChart 
-              data={salesDistribution || {}} 
-              type="SALES" 
-              title="ステージ分布" 
-            />
-
             <DealsTable 
               deals={salesDeals} 
               isLoading={dealsLoading}
               onRefresh={refetchDeals}
             />
           </div>
-        </div>
-
-        {/* Quick Actions */}
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle>クイックアクション</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="outline" className="flex items-center space-x-3 p-4 h-auto">
-                <Download className="h-5 w-5" />
-                <div className="text-left">
-                  <p className="font-medium">レポート出力</p>
-                  <p className="text-xs text-gray-500">パイプラインデータをダウンロード</p>
-                </div>
-              </Button>
-              
-              <Button variant="outline" className="flex items-center space-x-3 p-4 h-auto">
-                <Bell className="h-5 w-5" />
-                <div className="text-left">
-                  <p className="font-medium">フォローアップ予約</p>
-                  <p className="text-xs text-gray-500">カレンダーリマインダーを追加</p>
-                </div>
-              </Button>
-              
-              <Button variant="outline" className="flex items-center space-x-3 p-4 h-auto">
-                <TrendingUp className="h-5 w-5" />
-                <div className="text-left">
-                  <p className="font-medium">週次レポート送信</p>
-                  <p className="text-xs text-gray-500">チームサマリーをメール送信</p>
-                </div>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </main>
+          {/* クイックアクション行 */}
+          <div className="grid gap-6 lg:grid-cols-3">
+            <button
+              className="flex w-full items-center justify-center rounded-xl
+                         border border-dashed border-gray-300 py-8 text-sm
+                         transition hover:bg-gray-50 flex-col space-y-2"
+            >
+              <Download className="h-6 w-6 text-gray-400" />
+              <span>レポート出力</span>
+            </button>
+            
+            <button
+              className="flex w-full items-center justify-center rounded-xl
+                         border border-dashed border-gray-300 py-8 text-sm
+                         transition hover:bg-gray-50 flex-col space-y-2"
+            >
+              <Bell className="h-6 w-6 text-gray-400" />
+              <span>フォローアップ予約</span>
+            </button>
+            
+            <button
+              className="flex w-full items-center justify-center rounded-xl
+                         border border-dashed border-gray-300 py-8 text-sm
+                         transition hover:bg-gray-50 flex-col space-y-2"
+            >
+              <TrendingUp className="h-6 w-6 text-gray-400" />
+              <span>案件レポート起票</span>
+            </button>
+          </div>
+        </main>
 
       {/* Deal Modal */}
       <DealModal
