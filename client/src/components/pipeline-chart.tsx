@@ -12,12 +12,12 @@ interface PipelineChartProps {
 
 export default function PipelineChart({ data, type, title }: PipelineChartProps) {
   const stageOrder = type === "RENTAL" 
-    ? ["R_ENQUIRY", "R_VIEW", "R_APP", "R_SCREEN", "R_APPROVE", "R_CONTRACT", "R_MOVEIN"]
-    : ["S_ENQUIRY", "S_VIEW", "S_LOI", "S_DEPOSIT", "S_DD", "S_APPROVE", "S_CONTRACT", "S_CLOSING"];
+    ? ["R_ENQUIRY", "R_VIEW", "R_APP", "R_SCREEN", "R_APPROVE", "R_CONTRACT"]
+    : ["S_ENQUIRY", "S_VIEW", "S_LOI", "S_DEPOSIT", "S_DD", "S_APPROVE", "S_CONTRACT"];
 
-  const totalDeals = Object.values(data).reduce((sum, count) => sum + count, 0);
-  const maxCount = Math.max(...Object.values(data), 1);
-
+  // 完了済み（入居・決済）を除外してアクティブな取引数を計算
+  const activeDealCount = stageOrder.reduce((sum, stage) => sum + (data[stage] || 0), 0);
+  
   return (
     <Card className={cn(
       "h-full pipeline-card",
@@ -30,7 +30,7 @@ export default function PipelineChart({ data, type, title }: PipelineChartProps)
         <div className="space-y-3 pr-2">
           {stageOrder.map((stage) => {
             const count = data[stage] || 0;
-            const percentage = totalDeals > 0 ? (count / maxCount) * 100 : 0;
+            const percentage = activeDealCount > 0 ? (count / activeDealCount) * 100 : 0;
             
             return (
               <div key={stage} className="flex items-center gap-3">
@@ -51,7 +51,7 @@ export default function PipelineChart({ data, type, title }: PipelineChartProps)
           })}
         </div>
         
-        {totalDeals === 0 && (
+        {activeDealCount === 0 && (
           <div className="flex items-center justify-center h-full text-gray-500">
             <p>まだこのパイプラインに取引がありません</p>
           </div>
