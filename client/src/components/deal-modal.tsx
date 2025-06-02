@@ -15,10 +15,10 @@ import type { DealType, DealStage } from "@shared/schema";
 
 const dealFormSchema = z.object({
   type: z.enum(["RENTAL", "SALES"]),
-  title: z.string().min(1, "Property title is required"),
-  clientName: z.string().min(1, "Client name is required"),
-  stage: z.string().min(1, "Stage is required"),
-  amountYen: z.coerce.number().min(1, "Amount must be greater than 0"),
+  title: z.string().min(1, "物件名は必須です"),
+  clientName: z.string().min(1, "顧客名は必須です"),
+  stage: z.string().min(1, "ステージは必須です"),
+  amountYen: z.coerce.number().min(1, "金額は0より大きい値を入力してください"),
   assignedToId: z.string().optional(),
   nextAction: z.string().optional(),
   nextActionDue: z.string().optional(),

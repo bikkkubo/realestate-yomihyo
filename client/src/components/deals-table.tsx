@@ -24,7 +24,7 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
     return type === "RENTAL" ? `${formatted}/mo` : formatted;
   };
 
-  const formatNextActionDue = (date: string | null) => {
+  const formatNextActionDue = (date: Date | null) => {
     if (!date) return null;
     
     const dueDate = new Date(date);
@@ -34,25 +34,25 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
     
     if (diffDays < 0) {
       return {
-        label: `Overdue by ${Math.abs(diffDays)} day${Math.abs(diffDays) !== 1 ? 's' : ''}`,
+        label: `期限切れ ${Math.abs(diffDays)}日`,
         variant: "destructive" as const,
         icon: AlertTriangle
       };
     } else if (diffDays === 0) {
       return {
-        label: "Due today",
+        label: "今日期限",
         variant: "destructive" as const,
         icon: Clock
       };
     } else if (diffDays <= 3) {
       return {
-        label: `Due in ${diffDays} day${diffDays !== 1 ? 's' : ''}`,
+        label: `あと${diffDays}日`,
         variant: "secondary" as const,
         icon: Clock
       };
     } else {
       return {
-        label: `Due in ${diffDays} day${diffDays !== 1 ? 's' : ''}`,
+        label: `あと${diffDays}日`,
         variant: "outline" as const,
         icon: Clock
       };
@@ -99,7 +99,7 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
       <CardContent>
         {deals.length === 0 ? (
           <div className="text-center py-8 text-gray-500">
-            <p>No deals found</p>
+            <p>取引が見つかりません</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -108,15 +108,15 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
                 <TableRow>
                   <TableHead className="cursor-pointer hover:bg-gray-50">
                     <div className="flex items-center space-x-1">
-                      <span>Client</span>
+                      <span>顧客</span>
                       <ArrowUpDown className="h-4 w-4" />
                     </div>
                   </TableHead>
-                  <TableHead>Property</TableHead>
-                  <TableHead>Stage</TableHead>
-                  <TableHead>Rank</TableHead>
-                  <TableHead>Value</TableHead>
-                  <TableHead>Next Action</TableHead>
+                  <TableHead>物件</TableHead>
+                  <TableHead>ステージ</TableHead>
+                  <TableHead>ランク</TableHead>
+                  <TableHead>価格</TableHead>
+                  <TableHead>次のアクション</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -166,7 +166,7 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
                       <TableCell>
                         <div className="space-y-1">
                           <div className="text-sm text-gray-900">
-                            {deal.nextAction || "No action set"}
+                            {deal.nextAction || "アクション未設定"}
                           </div>
                           {nextActionStatus && (
                             <div className="flex items-center space-x-1">
@@ -190,7 +190,7 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
             {deals.length > 5 && (
               <div className="mt-4 text-center">
                 <Button variant="outline" size="sm">
-                  View All {deals.length} Deals
+                  全{deals.length}件の取引を表示
                 </Button>
               </div>
             )}
