@@ -127,7 +127,7 @@ export default function Dashboard() {
                   <SelectValue placeholder="All Stages" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Stages</SelectItem>
+                  <SelectItem value="all">All Stages</SelectItem>
                   <SelectItem value="R_ENQUIRY">R: Enquiry</SelectItem>
                   <SelectItem value="R_VIEW">R: Viewing</SelectItem>
                   <SelectItem value="R_APP">R: Application</SelectItem>
@@ -141,7 +141,7 @@ export default function Dashboard() {
                   <SelectValue placeholder="All Ranks" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Ranks</SelectItem>
+                  <SelectItem value="all">All Ranks</SelectItem>
                   <SelectItem value="A">A-Grade</SelectItem>
                   <SelectItem value="B">B-Grade</SelectItem>
                   <SelectItem value="C">C-Grade</SelectItem>

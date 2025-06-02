@@ -219,7 +219,7 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">Unassigned</SelectItem>
+                      <SelectItem value="unassigned">Unassigned</SelectItem>
                       {users.map((user: any) => (
                         <SelectItem key={user.id} value={user.id}>
                           {user.firstName && user.lastName 

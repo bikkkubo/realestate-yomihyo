@@ -21,8 +21,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
   // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  app.get('/api/auth/user', async (req: any, res) => {
     try {
+      // Development mode: return test admin user
+      if (process.env.NODE_ENV === 'development') {
+        const user = await storage.getUser('test-admin');
+        return res.json(user);
+      }
+      
+      // Production mode: use authentication
+      if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
       res.json(user);
@@ -33,10 +44,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Deal routes
-  app.get('/api/deals', isAuthenticated, async (req: any, res) => {
+  app.get('/api/deals', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      let userId = 'test-admin';
+      let user = await storage.getUser(userId);
+      
+      // Production mode: use authentication
+      if (process.env.NODE_ENV !== 'development') {
+        if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+          return res.status(401).json({ message: "Unauthorized" });
+        }
+        userId = req.user.claims.sub;
+        user = await storage.getUser(userId);
+      }
       
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -188,10 +208,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Analytics routes
-  app.get('/api/analytics/stats', isAuthenticated, async (req: any, res) => {
+  app.get('/api/analytics/stats', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      let userId = 'test-admin';
+      let user = await storage.getUser(userId);
+      
+      // Production mode: use authentication
+      if (process.env.NODE_ENV !== 'development') {
+        if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+          return res.status(401).json({ message: "Unauthorized" });
+        }
+        userId = req.user.claims.sub;
+        user = await storage.getUser(userId);
+      }
       
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -205,10 +234,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/analytics/stage-distribution/:type', isAuthenticated, async (req: any, res) => {
+  app.get('/api/analytics/stage-distribution/:type', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
+      let userId = 'test-admin';
+      let user = await storage.getUser(userId);
+      
+      // Production mode: use authentication
+      if (process.env.NODE_ENV !== 'development') {
+        if (!req.isAuthenticated() || !req.user?.claims?.sub) {
+          return res.status(401).json({ message: "Unauthorized" });
+        }
+        userId = req.user.claims.sub;
+        user = await storage.getUser(userId);
+      }
       
       if (!user) {
         return res.status(404).json({ message: "User not found" });
