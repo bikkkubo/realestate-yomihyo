@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import { getStageLabel } from "@/lib/scoring";
+import { cn } from "@/lib/utils";
 import type { DealType } from "@shared/schema";
 
 interface PipelineChartProps {
@@ -17,45 +19,40 @@ export default function PipelineChart({ data, type, title }: PipelineChartProps)
   const maxCount = Math.max(...Object.values(data), 1);
 
   return (
-    <Card className="h-full">
-      <CardHeader>
+    <Card className={cn(
+      "h-full pipeline-card",
+      "max-h-[380px] overflow-hidden"
+    )}>
+      <CardHeader className="pb-4">
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="h-[400px] flex flex-col">
-        <div className="space-y-3">
+      <CardContent className="h-[300px] overflow-y-auto">
+        <div className="space-y-3 pr-2">
           {stageOrder.map((stage) => {
             const count = data[stage] || 0;
-            const percentage = totalDeals > 0 ? (count / totalDeals) * 100 : 0;
-            const barWidth = totalDeals > 0 ? (count / maxCount) * 100 : 0;
+            const percentage = totalDeals > 0 ? (count / maxCount) * 100 : 0;
             
             return (
-              <div key={stage} className="flex items-center justify-between">
-                <span className="text-sm font-medium text-gray-600 w-24 truncate">
+              <div key={stage} className="flex items-center gap-3">
+                <span className="text-sm font-medium text-gray-600 max-w-[100px] truncate flex-shrink-0">
                   {getStageLabel(stage as any)}
                 </span>
-                <div className="flex-1 bg-gray-200 rounded-full h-2 mx-3">
-                  <div 
-                    className={`h-2 rounded-full ${
-                      type === "RENTAL" ? "bg-blue-500" : "bg-green-500"
-                    }`}
-                    style={{ width: `${barWidth}%` }}
-                  />
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm font-medium text-gray-900 w-8 text-right">
-                    {count}
-                  </span>
-                  <span className="text-xs text-gray-500 w-12 text-right">
-                    {percentage.toFixed(0)}%
-                  </span>
-                </div>
+                
+                <Progress
+                  value={percentage}
+                  className="flex-1 h-2 max-w-[180px] shrink-0"
+                />
+                
+                <span className="text-sm font-medium text-gray-900 w-8 text-right flex-shrink-0">
+                  {count}
+                </span>
               </div>
             );
           })}
         </div>
         
         {totalDeals === 0 && (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
+          <div className="flex items-center justify-center h-full text-gray-500">
             <p>まだこのパイプラインに取引がありません</p>
           </div>
         )}

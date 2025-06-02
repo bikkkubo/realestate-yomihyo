@@ -209,3 +209,21 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+/* Pipeline card scrollbar styling */
+.pipeline-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pipeline-card::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+}
+
+.pipeline-card::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+  border-radius: 3px;
+}
+
+.pipeline-card::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.25);
+}
