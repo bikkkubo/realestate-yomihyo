@@ -269,7 +269,7 @@ export default function Dashboard() {
         </div>
 
         {/* NOTE: 各ブロックを縦に独立させる */}
-        <main className="space-y-10">
+        <div className="space-y-10">
           {/* パイプライン行 */}
           <div className="grid gap-6 lg:grid-cols-2">
             <div className="space-y-4">
@@ -364,7 +364,8 @@ export default function Dashboard() {
               <span>案件レポート起票</span>
             </button>
           </div>
-        </main>
+        </div>
+      </main>
 
       {/* Deal Modal */}
       <DealModal
