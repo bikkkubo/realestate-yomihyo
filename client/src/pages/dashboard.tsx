@@ -212,13 +212,26 @@ export default function Dashboard() {
 
           <Card>
             <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Aランク取引</p>
-                  <p className="text-3xl font-bold text-green-600">{stats?.aRankDeals || 0}</p>
+                  <p className="text-sm font-medium text-gray-600">ランク別取引</p>
                 </div>
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Star className="h-6 w-6 text-green-600" />
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <Star className="h-6 w-6 text-blue-600" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Aランク</span>
+                  <span className="text-lg font-bold text-green-600">{stats?.aRankDeals || 0}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Bランク</span>
+                  <span className="text-lg font-bold text-yellow-600">{stats?.bRankDeals || 0}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Cランク</span>
+                  <span className="text-lg font-bold text-red-600">{stats?.cRankDeals || 0}</span>
                 </div>
               </div>
             </CardContent>

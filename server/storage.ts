@@ -38,6 +38,8 @@ export interface IStorage {
   getDealStats(): Promise<{
     totalDeals: number;
     aRankDeals: number;
+    bRankDeals: number;
+    cRankDeals: number;
     overdueActions: number;
     totalRevenue: number;
   }>;
@@ -171,6 +173,8 @@ export class DatabaseStorage implements IStorage {
   async getDealStats(): Promise<{
     totalDeals: number;
     aRankDeals: number;
+    bRankDeals: number;
+    cRankDeals: number;
     overdueActions: number;
     totalRevenue: number;
   }> {
@@ -180,6 +184,8 @@ export class DatabaseStorage implements IStorage {
     return {
       totalDeals: allDeals.length,
       aRankDeals: allDeals.filter(d => d.rank === "A").length,
+      bRankDeals: allDeals.filter(d => d.rank === "B").length,
+      cRankDeals: allDeals.filter(d => d.rank === "C").length,
       overdueActions: allDeals.filter(d => 
         d.nextActionDue && d.nextActionDue < now
       ).length,
