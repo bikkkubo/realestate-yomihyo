@@ -96,7 +96,7 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="h-[400px] flex flex-col">
+      <CardContent className="fixed-height-400 flex flex-col">
         {deals.length === 0 ? (
           <div className="flex-1 flex items-center justify-center text-gray-500">
             <p>取引が見つかりません</p>

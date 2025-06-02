@@ -196,3 +196,16 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Fixed height containers */
+.fixed-height-400 {
+  height: 400px !important;
+  max-height: 400px !important;
+  overflow: hidden;
+}
+
+.fixed-height-400 .table-container {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
