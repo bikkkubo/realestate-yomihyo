@@ -96,9 +96,9 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="h-[400px] flex flex-col">
+      <CardContent className="max-h-[500px] overflow-y-auto">
         {deals.length === 0 ? (
-          <div className="flex-1 flex items-center justify-center text-gray-500">
+          <div className="py-8 text-center text-gray-500">
             <p>取引が見つかりません</p>
           </div>
         ) : (
