@@ -1,0 +1,124 @@
+# REPLIT PROMPT : Real-Estate Pipeline Dashboard (Rental + Sales)
+
+## 0. GOAL
+Build a single-page web app that lets agents compare **Rental** and **Sales** funnels side-by-side, with role-based access control.
+
+## 1. TECH STACK
+- Front-end : Next.js 14 (App Router, Server Actions) + TailwindCSS
+- Back-end  : Next.js API routes (tRPC-style) + Prisma ORM  
+- DB        : SQLite for local / Supabase Postgres in prod (switch via DATABASE_URL)
+- Auth      : NextAuth (Google OAuth) + JWT
+- Charts    : @tanstack/react-table + recharts
+- CI/CD     : Replit Nix + “run” = `npm run dev`
+
+## 2. FILE TREE (top level)
+.
+├── app/                        # Next.js pages & server actions  
+│   ├── dashboard/              # Main view ► /dashboard  
+│   ├── api/                    # REST endpoints  
+│   └── auth/                   # NextAuth handlers  
+├── prisma/                     
+│   └── schema.prisma           # DB schema (see §3)  
+├── lib/                        # reusable utils (auth, rbac, score)  
+├── .env.example                # required secrets  
+└── README.md
+
+## 3. DATABASE DESIGN (ERD)
+
+TABLE users
+- id            String  @id @default(uuid())
+- email         String  @unique
+- name          String?
+- role          Role     @default(AGENT)   // “ADMIN” | “MANAGER” | “AGENT” | “VIEWER”
+- createdAt     DateTime @default(now())
+
+TABLE deals                // 共通パイプライン
+- id            String  @id @default(uuid())
+- type          DealType          // “RENTAL” | “SALES”
+- title         String
+- clientName    String
+- stage         DealStage
+- score         Int
+- rank          Rank              // “A” | “B” | “C”
+- amountYen     Int               // annual rent or sales price
+- nextAction    String?
+- nextActionDue DateTime?
+- assignedToId  String?           @relation(fields:[assignedToId], references:[id])
+- createdAt     DateTime          @default(now())
+
+ENUM Role      { ADMIN MANAGER AGENT VIEWER }
+ENUM DealType  { RENTAL SALES }
+ENUM Rank      { A B C }
+ENUM DealStage {
+  // RENTAL-specific (R_), SALES-specific (S_), shared (SH_)
+  R_ENQUIRY R_VIEW R_APP R_SCREEN R_APPROVE R_CONTRACT R_MOVEIN
+  S_ENQUIRY S_VIEW S_LOI S_DEPOSIT S_DD S_APPROVE S_CONTRACT S_CLOSING
+}
+
+## 4. RBAC MATRIX (checked inside middleware/auth.ts)
+
+| Role   | Read Own | Read Team | Read All | Write Own | Write All |
+|--------|----------|-----------|----------|-----------|-----------|
+| ADMIN  | ✔︎        | ✔︎         | ✔︎        | ✔︎        | ✔︎        |
+| MANAGER| ✔︎        | ✔︎         | ❌        | ✔︎        | ✔︎        |
+| AGENT  | ✔︎        | ❌         | ❌        | ✔︎        | ❌        |
+| VIEWER | ✔︎        | ❌         | ❌        | ❌        | ❌        |
+
+## 5. BUSINESS LOGIC
+
+### 5.1 Score & Rank (imports from lib/score.ts)
+- Rental & Sales each have `calculateScore(deal)` implementing the tables below  
+- `afterSave` Prisma hook recomputes score + rank automatically
+
+#### Rental scoring (max 100)
+| KPI                           | Pts |
+|-------------------------------|----:|
+| Application received          | 25  |
+| Screening started             | 15  |
+| Screening approved            | 20  |
+| Contract signed               | 20  |
+| Move-in date scheduled        | 20  |
+
+Rank rules → A ≥ 85, B 55-84, C < 55
+
+#### Sales scoring (max 100)
+| KPI                                   | Pts |
+|---------------------------------------|----:|
+| LOI submitted                         | 20  |
+| Deposit received                      | 15  |
+| Loan full approval OR cash verified   | 20  |
+| DD completed                          | 25  |
+| Contract signed                       | 20  |
+
+Rank rules → A ≥ 80, B 45-79, C < 45
+
+### 5.2 Dashboard UX (/dashboard)
+- **Left column** : Rental funnel table + stacked bar chart by stage  
+- **Right column**: Sales funnel table + stacked bar chart  
+- Status chips coloured by Rank  
+- Search / stage filter / assigned-to filter top-right  
+- “+ New Deal” button opens modal (prefilled type) respecting RBAC  
+- Red badge if `nextActionDue < today`
+
+### 5.3 Scheduled Jobs
+`/lib/cron.ts` (node-cron):
+- Daily 08:00 JST : send Slack summary “Aランク不足警告” to #sales
+- Weekly Monday : export CSV snapshot to Replit storage for backup
+
+## 6. SETUP STEPS (automated in run-once script)
+1. `npx prisma migrate dev --name init`  
+2. `npx prisma generate`  
+3. Seed `admin@example.com` pwd:`password`, role:ADMIN  
+4. Print “Open http://localhost:3000/dashboard and login with Google OAuth.”
+
+## 7. TESTS (Vitest)
+- auth.test.ts - role gates
+- score.test.ts - stage→score→rank mapping
+- api.deals.test.ts - CRUD + RBAC
+
+## 8. NICE-TO-HAVE BACKLOG (POST-MVP)
+- Kanban drag-and-drop stage change
+- PDF auto-quote generator
+- Multi-tenant (agency-per-company) isolation
+
+# END PROMPT
