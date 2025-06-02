@@ -127,7 +127,7 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            Create New {dealType === "RENTAL" ? "Rental" : "Sales"} Deal
+            新しい{dealType === "RENTAL" ? "賃貸" : "売買"}取引を作成
           </DialogTitle>
         </DialogHeader>
 
@@ -138,9 +138,9 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Property Title</FormLabel>
+                  <FormLabel>物件名</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., 3BR Shibuya Apartment" {...field} />
+                    <Input placeholder="例: 渋谷3LDKマンション" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -152,9 +152,9 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
               name="clientName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Client Name</FormLabel>
+                  <FormLabel>顧客名</FormLabel>
                   <FormControl>
-                    <Input placeholder="Client full name" {...field} />
+                    <Input placeholder="顧客の氏名" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -166,11 +166,11 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
               name="stage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Stage</FormLabel>
+                  <FormLabel>ステージ</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select stage" />
+                        <SelectValue placeholder="ステージを選択" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -192,12 +192,12 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Amount (¥) {dealType === "RENTAL" ? "- Monthly" : "- Total"}
+                    金額 (¥) {dealType === "RENTAL" ? "- 月額" : "- 総額"}
                   </FormLabel>
                   <FormControl>
                     <Input 
                       type="number" 
-                      placeholder={dealType === "RENTAL" ? "Monthly rent" : "Sale price"} 
+                      placeholder={dealType === "RENTAL" ? "月額賃料" : "売却価格"} 
                       {...field} 
                     />
                   </FormControl>
@@ -211,15 +211,15 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
               name="assignedToId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Assigned Agent</FormLabel>
+                  <FormLabel>担当エージェント</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select agent" />
+                        <SelectValue placeholder="エージェントを選択" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="unassigned">Unassigned</SelectItem>
+                      <SelectItem value="unassigned">未割り当て</SelectItem>
                       {users.map((user: any) => (
                         <SelectItem key={user.id} value={user.id}>
                           {user.firstName && user.lastName 
@@ -239,9 +239,9 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
               name="nextAction"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Next Action</FormLabel>
+                  <FormLabel>次のアクション</FormLabel>
                   <FormControl>
-                    <Input placeholder="Next step to take" {...field} />
+                    <Input placeholder="次に取るべきステップ" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -253,7 +253,7 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
               name="nextActionDue"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Next Action Due Date</FormLabel>
+                  <FormLabel>次のアクション期限日</FormLabel>
                   <FormControl>
                     <Input type="date" {...field} />
                   </FormControl>
@@ -268,7 +268,7 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
                 className="flex-1" 
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Creating..." : "Create Deal"}
+                {isSubmitting ? "作成中..." : "取引を作成"}
               </Button>
               <Button 
                 type="button" 
@@ -277,7 +277,7 @@ export default function DealModal({ isOpen, onClose, dealType, onSuccess }: Deal
                 onClick={onClose}
                 disabled={isSubmitting}
               >
-                Cancel
+                キャンセル
               </Button>
             </div>
           </form>
