@@ -110,7 +110,7 @@ export default function Dashboard() {
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <Home className="h-5 w-5 text-white" />
                 </div>
-                <h1 className="text-xl font-semibold text-gray-900">Estate Pipeline</h1>
+                <h1 className="text-xl font-semibold text-gray-900">不動産パイプライン</h1>
               </div>
             </div>
 
@@ -120,7 +120,7 @@ export default function Dashboard() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   type="text"
-                  placeholder="Search deals..."
+                  placeholder="取引を検索..."
                   className="pl-10"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -131,13 +131,13 @@ export default function Dashboard() {
                   <SelectValue placeholder="All Stages" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Stages</SelectItem>
-                  <SelectItem value="R_ENQUIRY">R: Enquiry</SelectItem>
-                  <SelectItem value="R_VIEW">R: Viewing</SelectItem>
-                  <SelectItem value="R_APP">R: Application</SelectItem>
-                  <SelectItem value="S_ENQUIRY">S: Enquiry</SelectItem>
-                  <SelectItem value="S_VIEW">S: Viewing</SelectItem>
-                  <SelectItem value="S_LOI">S: LOI</SelectItem>
+                  <SelectItem value="all">全ステージ</SelectItem>
+                  <SelectItem value="R_ENQUIRY">賃貸: 問い合わせ</SelectItem>
+                  <SelectItem value="R_VIEW">賃貸: 内見</SelectItem>
+                  <SelectItem value="R_APP">賃貸: 申込み</SelectItem>
+                  <SelectItem value="S_ENQUIRY">売買: 問い合わせ</SelectItem>
+                  <SelectItem value="S_VIEW">売買: 内見</SelectItem>
+                  <SelectItem value="S_LOI">売買: 買付申込</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={rankFilter} onValueChange={setRankFilter}>
@@ -145,10 +145,10 @@ export default function Dashboard() {
                   <SelectValue placeholder="All Ranks" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Ranks</SelectItem>
-                  <SelectItem value="A">A-Grade</SelectItem>
-                  <SelectItem value="B">B-Grade</SelectItem>
-                  <SelectItem value="C">C-Grade</SelectItem>
+                  <SelectItem value="all">全ランク</SelectItem>
+                  <SelectItem value="A">Aランク</SelectItem>
+                  <SelectItem value="B">Bランク</SelectItem>
+                  <SelectItem value="C">Cランク</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -195,7 +195,7 @@ export default function Dashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Total Deals</p>
+                  <p className="text-sm font-medium text-gray-600">総取引数</p>
                   <p className="text-3xl font-bold text-gray-900">{stats?.totalDeals || 0}</p>
                 </div>
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -214,7 +214,7 @@ export default function Dashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">A Rank Deals</p>
+                  <p className="text-sm font-medium text-gray-600">Aランク取引</p>
                   <p className="text-3xl font-bold text-green-600">{stats?.aRankDeals || 0}</p>
                 </div>
                 <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -228,7 +228,7 @@ export default function Dashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Revenue YTD</p>
+                  <p className="text-sm font-medium text-gray-600">売上合計</p>
                   <p className="text-3xl font-bold text-gray-900">
                     ¥{((stats?.totalRevenue || 0) / 1000000).toFixed(1)}M
                   </p>
@@ -244,7 +244,7 @@ export default function Dashboard() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Overdue Actions</p>
+                  <p className="text-sm font-medium text-gray-600">期限切れアクション</p>
                   <p className="text-3xl font-bold text-red-600">{stats?.overdueActions || 0}</p>
                 </div>
                 <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">

@@ -47,21 +47,21 @@ export function calculateRank(type: DealType, score: number): Rank {
 
 export function getStageLabel(stage: DealStage): string {
   const labels: Record<DealStage, string> = {
-    R_ENQUIRY: "Enquiry",
-    R_VIEW: "Viewing",
-    R_APP: "Application",
-    R_SCREEN: "Screening",
-    R_APPROVE: "Approved",
-    R_CONTRACT: "Contract",
-    R_MOVEIN: "Move-in",
-    S_ENQUIRY: "Enquiry",
-    S_VIEW: "Viewing",
-    S_LOI: "LOI",
-    S_DEPOSIT: "Deposit",
-    S_DD: "Due Diligence",
-    S_APPROVE: "Approved",
-    S_CONTRACT: "Contract",
-    S_CLOSING: "Closing",
+    R_ENQUIRY: "問い合わせ",
+    R_VIEW: "内見",
+    R_APP: "申込み",
+    R_SCREEN: "審査中",
+    R_APPROVE: "審査通過",
+    R_CONTRACT: "契約",
+    R_MOVEIN: "入居",
+    S_ENQUIRY: "問い合わせ",
+    S_VIEW: "内見",
+    S_LOI: "買付申込",
+    S_DEPOSIT: "手付金",
+    S_DD: "デューデリ",
+    S_APPROVE: "承認",
+    S_CONTRACT: "契約",
+    S_CLOSING: "決済",
   };
   
   return labels[stage] || stage;
