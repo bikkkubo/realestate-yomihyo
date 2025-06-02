@@ -89,10 +89,10 @@ export default function DealsTable({ deals, isLoading, onRefresh }: DealsTablePr
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">
-            Recent Deals ({deals.length})
+            最近の取引 ({deals.length})
           </CardTitle>
           <Button variant="ghost" size="sm" onClick={onRefresh}>
-            Refresh
+            更新
           </Button>
         </div>
       </CardHeader>

@@ -56,7 +56,7 @@ export default function PipelineChart({ data, type, title }: PipelineChartProps)
         
         {totalDeals === 0 && (
           <div className="text-center py-8 text-gray-500">
-            <p>No deals in this pipeline yet</p>
+            <p>まだこのパイプラインに取引がありません</p>
           </div>
         )}
       </CardContent>

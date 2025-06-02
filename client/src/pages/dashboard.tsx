@@ -265,20 +265,20 @@ export default function Dashboard() {
                   <Home className="h-6 w-6 text-blue-600" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Rental Pipeline</h2>
-                  <p className="text-sm text-gray-500">{rentalDeals.length} active deals</p>
+                  <h2 className="text-xl font-semibold text-gray-900">賃貸パイプライン</h2>
+                  <p className="text-sm text-gray-500">{rentalDeals.length} 件のアクティブ取引</p>
                 </div>
               </div>
               <Button onClick={() => openNewDealModal("RENTAL")} className="flex items-center space-x-2">
                 <Plus className="h-4 w-4" />
-                <span>New Rental</span>
+                <span>新規賃貸</span>
               </Button>
             </div>
 
             <PipelineChart 
               data={rentalDistribution || {}} 
               type="RENTAL" 
-              title="Stage Distribution" 
+              title="ステージ分布" 
             />
 
             <DealsTable 
@@ -296,8 +296,8 @@ export default function Dashboard() {
                   <Building className="h-6 w-6 text-green-600" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-gray-900">Sales Pipeline</h2>
-                  <p className="text-sm text-gray-500">{salesDeals.length} active deals</p>
+                  <h2 className="text-xl font-semibold text-gray-900">売買パイプライン</h2>
+                  <p className="text-sm text-gray-500">{salesDeals.length} 件のアクティブ取引</p>
                 </div>
               </div>
               <Button 
@@ -305,14 +305,14 @@ export default function Dashboard() {
                 className="flex items-center space-x-2 bg-green-600 hover:bg-green-700"
               >
                 <Plus className="h-4 w-4" />
-                <span>New Sale</span>
+                <span>新規売買</span>
               </Button>
             </div>
 
             <PipelineChart 
               data={salesDistribution || {}} 
               type="SALES" 
-              title="Stage Distribution" 
+              title="ステージ分布" 
             />
 
             <DealsTable 
