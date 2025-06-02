@@ -21,7 +21,7 @@ export default function PipelineChart({ data, type, title }: PipelineChartProps)
       <CardHeader>
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="min-h-[300px] flex flex-col">
+      <CardContent className="h-[400px] flex flex-col">
         <div className="space-y-3">
           {stageOrder.map((stage) => {
             const count = data[stage] || 0;
