@@ -188,7 +188,7 @@ export default function Dashboard() {
       </nav>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Header Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card>
@@ -339,31 +339,31 @@ export default function Dashboard() {
         {/* Quick Actions */}
         <Card className="mt-8">
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+            <CardTitle>クイックアクション</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Button variant="outline" className="flex items-center space-x-3 p-4 h-auto">
                 <Download className="h-5 w-5" />
                 <div className="text-left">
-                  <p className="font-medium">Export Report</p>
-                  <p className="text-xs text-gray-500">Download pipeline data</p>
+                  <p className="font-medium">レポート出力</p>
+                  <p className="text-xs text-gray-500">パイプラインデータをダウンロード</p>
                 </div>
               </Button>
               
               <Button variant="outline" className="flex items-center space-x-3 p-4 h-auto">
                 <Bell className="h-5 w-5" />
                 <div className="text-left">
-                  <p className="font-medium">Schedule Follow-up</p>
-                  <p className="text-xs text-gray-500">Add calendar reminders</p>
+                  <p className="font-medium">フォローアップ予約</p>
+                  <p className="text-xs text-gray-500">カレンダーリマインダーを追加</p>
                 </div>
               </Button>
               
               <Button variant="outline" className="flex items-center space-x-3 p-4 h-auto">
                 <TrendingUp className="h-5 w-5" />
                 <div className="text-left">
-                  <p className="font-medium">Send Weekly Report</p>
-                  <p className="text-xs text-gray-500">Email team summary</p>
+                  <p className="font-medium">週次レポート送信</p>
+                  <p className="text-xs text-gray-500">チームサマリーをメール送信</p>
                 </div>
               </Button>
             </div>
