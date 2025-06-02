@@ -40,7 +40,11 @@ export default function Dashboard() {
 
   // Fetch deals
   const { data: deals = [], isLoading: dealsLoading, refetch: refetchDeals } = useQuery({
-    queryKey: ["/api/deals", { search: searchQuery, stage: stageFilter, rank: rankFilter }],
+    queryKey: ["/api/deals", { 
+      search: searchQuery, 
+      stage: stageFilter === "all" ? "" : stageFilter, 
+      rank: rankFilter === "all" ? "" : rankFilter 
+    }],
     enabled: isAuthenticated,
     retry: false,
   });
