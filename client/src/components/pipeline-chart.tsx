@@ -27,23 +27,27 @@ export default function PipelineChart({ data, type, title }: PipelineChartProps)
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
       <CardContent className="h-[300px] overflow-y-auto">
-        <div className="space-y-3 pr-2">
+        <div className="space-y-4 pr-1">
           {stageOrder.map((stage) => {
             const count = data[stage] || 0;
             const percentage = activeDealCount > 0 ? (count / activeDealCount) * 100 : 0;
             
             return (
-              <div key={stage} className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-600 max-w-[100px] truncate flex-shrink-0">
+              <div key={stage} className="flex items-center gap-2">
+                <span className="text-sm font-medium text-gray-600 w-20 truncate flex-shrink-0">
                   {getStageLabel(stage as any)}
                 </span>
                 
-                <Progress
-                  value={percentage}
-                  className="flex-1 h-2 max-w-[180px] shrink-0"
-                />
+                <div className="flex-1 bg-gray-200 rounded-full h-2 min-w-0">
+                  <div 
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      type === "RENTAL" ? "bg-blue-500" : "bg-green-500"
+                    }`}
+                    style={{ width: `${Math.max(percentage, count > 0 ? 8 : 0)}%` }}
+                  />
+                </div>
                 
-                <span className="text-sm font-medium text-gray-900 w-8 text-right flex-shrink-0">
+                <span className="text-sm font-medium text-gray-900 w-6 text-right flex-shrink-0">
                   {count}
                 </span>
               </div>

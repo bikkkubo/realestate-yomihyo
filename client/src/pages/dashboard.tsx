@@ -114,8 +114,18 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Search and Filters */}
-            <div className="flex items-center space-x-4 flex-1 max-w-lg mx-8">
+            {/* Navigation and Search */}
+            <div className="flex items-center space-x-6 flex-1 max-w-2xl mx-8">
+              <nav className="flex items-center space-x-1">
+                <Button variant="ghost" size="sm" asChild>
+                  <a href="/" className="text-blue-600 font-medium">ダッシュボード</a>
+                </Button>
+                <span className="text-gray-400">/</span>
+                <Button variant="ghost" size="sm" asChild>
+                  <a href="/forecast" className="text-gray-600 hover:text-blue-600">ヨミ表</a>
+                </Button>
+              </nav>
+              
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
