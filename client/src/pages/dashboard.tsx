@@ -1,8 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
-import { isUnauthorizedError } from "@/lib/authUtils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -15,28 +12,11 @@ import DealModal from "@/components/deal-modal";
 import type { Deal, DealType } from "@shared/schema";
 
 export default function Dashboard() {
-  const { toast } = useToast();
-  const { user, isLoading, isAuthenticated } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [stageFilter, setStageFilter] = useState("");
   const [rankFilter, setRankFilter] = useState("");
   const [showDealModal, setShowDealModal] = useState(false);
   const [dealModalType, setDealModalType] = useState<DealType>("RENTAL");
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      toast({
-        title: "Unauthorized",
-        description: "You are logged out. Logging in again...",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/api/login";
-      }, 500);
-      return;
-    }
-  }, [isAuthenticated, isLoading, toast]);
 
   // Fetch deals
   const { data: deals = [], isLoading: dealsLoading, refetch: refetchDeals } = useQuery({
@@ -45,40 +25,21 @@ export default function Dashboard() {
       stage: stageFilter === "all" ? "" : stageFilter, 
       rank: rankFilter === "all" ? "" : rankFilter 
     }],
-    enabled: isAuthenticated,
-    retry: false,
   });
 
   // Fetch stats
   const { data: stats } = useQuery({
     queryKey: ["/api/analytics/stats"],
-    enabled: isAuthenticated,
-    retry: false,
   });
 
   // Fetch stage distributions
   const { data: rentalDistribution } = useQuery({
     queryKey: ["/api/analytics/stage-distribution/RENTAL"],
-    enabled: isAuthenticated,
-    retry: false,
   });
 
   const { data: salesDistribution } = useQuery({
     queryKey: ["/api/analytics/stage-distribution/SALES"],
-    enabled: isAuthenticated,
-    retry: false,
   });
-
-  if (isLoading || !isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
-  }
 
   const rentalDeals = deals.filter((deal: Deal) => deal.type === "RENTAL");
   const salesDeals = deals.filter((deal: Deal) => deal.type === "SALES");
@@ -86,16 +47,6 @@ export default function Dashboard() {
   const openNewDealModal = (type: DealType) => {
     setDealModalType(type);
     setShowDealModal(true);
-  };
-
-  const getUserInitials = (user: any) => {
-    if (user?.firstName && user?.lastName) {
-      return user.firstName[0] + user.lastName[0];
-    }
-    if (user?.email) {
-      return user.email.substring(0, 2).toUpperCase();
-    }
-    return "U";
   };
 
   return (
@@ -173,24 +124,12 @@ export default function Dashboard() {
               </Button>
               <div className="flex items-center space-x-3">
                 <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                  <span className="text-white text-sm font-medium">{getUserInitials(user)}</span>
+                  <span className="text-white text-sm font-medium">大久</span>
                 </div>
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium text-gray-900">
-                    {user?.firstName && user?.lastName 
-                      ? `${user.firstName} ${user.lastName}` 
-                      : user?.email || "User"}
-                  </p>
-                  <p className="text-xs text-gray-500">{user?.role || "Agent"}</p>
+                  <p className="text-sm font-medium text-gray-900">大久保 洋祐</p>
+                  <p className="text-xs text-gray-500">エージェント</p>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => window.location.href = '/api/logout'}
-                  className="ml-2"
-                >
-                  Logout
-                </Button>
               </div>
             </div>
           </div>

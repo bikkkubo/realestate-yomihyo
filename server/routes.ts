@@ -46,34 +46,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Deal routes
   app.get('/api/deals', async (req: any, res) => {
     try {
-      let userId = 'test-admin';
-      let user = await storage.getUser(userId);
-      
-      // Production mode: use authentication
-      if (process.env.NODE_ENV !== 'development') {
-        if (!req.isAuthenticated() || !req.user?.claims?.sub) {
-          return res.status(401).json({ message: "Unauthorized" });
-        }
-        userId = req.user.claims.sub;
-        user = await storage.getUser(userId);
-      }
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
       const { type, stage, rank, search } = req.query;
       
       let filters: any = { type, stage, rank, search };
-      
-      // Apply RBAC filtering
-      if (!hasPermission(user.role, "read", "all")) {
-        if (hasPermission(user.role, "read", "own")) {
-          filters.assignedToId = userId;
-        } else {
-          return res.status(403).json({ message: "Insufficient permissions" });
-        }
-      }
       
       const deals = await storage.getDeals(filters);
       res.json(deals);
@@ -83,24 +58,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get('/api/deals/:id', isAuthenticated, async (req: any, res) => {
+  app.get('/api/deals/:id', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
       const deal = await storage.getDeal(req.params.id);
       
       if (!deal) {
         return res.status(404).json({ message: "Deal not found" });
-      }
-
-      // Check permissions
-      if (!hasPermission(user.role, "read", "all") && deal.assignedToId !== userId) {
-        return res.status(403).json({ message: "Insufficient permissions" });
       }
 
       res.json(deal);
