@@ -19,7 +19,7 @@ export default function Dashboard() {
   const [dealModalType, setDealModalType] = useState<DealType>("RENTAL");
 
   // Fetch deals
-  const { data: deals = [], isLoading: dealsLoading, refetch: refetchDeals } = useQuery({
+  const { data: deals = [], isLoading: dealsLoading, refetch: refetchDeals } = useQuery<Deal[]>({
     queryKey: ["/api/deals", { 
       search: searchQuery, 
       stage: stageFilter === "all" ? "" : stageFilter, 
@@ -28,21 +28,35 @@ export default function Dashboard() {
   });
 
   // Fetch stats
-  const { data: stats } = useQuery({
+  const { data: stats = {
+    totalDeals: 0,
+    aRankDeals: 0,
+    bRankDeals: 0,
+    cRankDeals: 0,
+    overdueActions: 0,
+    totalRevenue: 0
+  } } = useQuery<{
+    totalDeals: number;
+    aRankDeals: number;
+    bRankDeals: number;
+    cRankDeals: number;
+    overdueActions: number;
+    totalRevenue: number;
+  }>({
     queryKey: ["/api/analytics/stats"],
   });
 
   // Fetch stage distributions
-  const { data: rentalDistribution } = useQuery({
+  const { data: rentalDistribution = {} } = useQuery<Record<string, number>>({
     queryKey: ["/api/analytics/stage-distribution/RENTAL"],
   });
 
-  const { data: salesDistribution } = useQuery({
+  const { data: salesDistribution = {} } = useQuery<Record<string, number>>({
     queryKey: ["/api/analytics/stage-distribution/SALES"],
   });
 
-  const rentalDeals = deals.filter((deal: Deal) => deal.type === "RENTAL");
-  const salesDeals = deals.filter((deal: Deal) => deal.type === "SALES");
+  const rentalDeals = deals?.filter((deal: Deal) => deal.type === "RENTAL") || [];
+  const salesDeals = deals?.filter((deal: Deal) => deal.type === "SALES") || [];
 
   const openNewDealModal = (type: DealType) => {
     setDealModalType(type);
@@ -118,7 +132,7 @@ export default function Dashboard() {
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
-                {stats?.overdueActions > 0 && (
+                {(stats?.overdueActions || 0) > 0 && (
                   <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 )}
               </Button>
