@@ -73,25 +73,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/deals', isAuthenticated, async (req: any, res) => {
+  app.post('/api/deals', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      if (!hasPermission(user.role, "write", "own")) {
-        return res.status(403).json({ message: "Insufficient permissions" });
-      }
-
       const dealData = insertDealSchema.parse(req.body);
       
-      // If user can only write own deals, assign to self
-      if (!hasPermission(user.role, "write", "all")) {
-        dealData.assignedToId = userId;
-      }
+      // Always assign to the fixed agent
+      dealData.assignedToId = "okubo";
 
       const deal = await storage.createDeal(dealData);
       res.status(201).json(deal);
@@ -104,27 +91,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put('/api/deals/:id', isAuthenticated, async (req: any, res) => {
+  app.put('/api/deals/:id', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
       const existing = await storage.getDeal(req.params.id);
       
       if (!existing) {
         return res.status(404).json({ message: "Deal not found" });
-      }
-
-      // Check permissions
-      const canWriteAll = hasPermission(user.role, "write", "all");
-      const canWriteOwn = hasPermission(user.role, "write", "own") && existing.assignedToId === userId;
-      
-      if (!canWriteAll && !canWriteOwn) {
-        return res.status(403).json({ message: "Insufficient permissions" });
       }
 
       const dealData = updateDealSchema.parse({ ...req.body, id: req.params.id });
@@ -139,27 +111,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete('/api/deals/:id', isAuthenticated, async (req: any, res) => {
+  app.delete('/api/deals/:id', async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
       const existing = await storage.getDeal(req.params.id);
       
       if (!existing) {
         return res.status(404).json({ message: "Deal not found" });
-      }
-
-      // Check permissions
-      const canWriteAll = hasPermission(user.role, "write", "all");
-      const canWriteOwn = hasPermission(user.role, "write", "own") && existing.assignedToId === userId;
-      
-      if (!canWriteAll && !canWriteOwn) {
-        return res.status(403).json({ message: "Insufficient permissions" });
       }
 
       await storage.deleteDeal(req.params.id);
@@ -173,22 +130,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Analytics routes
   app.get('/api/analytics/stats', async (req: any, res) => {
     try {
-      let userId = 'test-admin';
-      let user = await storage.getUser(userId);
-      
-      // Production mode: use authentication
-      if (process.env.NODE_ENV !== 'development') {
-        if (!req.isAuthenticated() || !req.user?.claims?.sub) {
-          return res.status(401).json({ message: "Unauthorized" });
-        }
-        userId = req.user.claims.sub;
-        user = await storage.getUser(userId);
-      }
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
       const stats = await storage.getDealStats();
       res.json(stats);
     } catch (error) {
@@ -199,22 +140,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/analytics/stage-distribution/:type', async (req: any, res) => {
     try {
-      let userId = 'test-admin';
-      let user = await storage.getUser(userId);
-      
-      // Production mode: use authentication
-      if (process.env.NODE_ENV !== 'development') {
-        if (!req.isAuthenticated() || !req.user?.claims?.sub) {
-          return res.status(401).json({ message: "Unauthorized" });
-        }
-        userId = req.user.claims.sub;
-        user = await storage.getUser(userId);
-      }
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
       const type = req.params.type as "RENTAL" | "SALES";
       const distribution = await storage.getStageDistribution(type);
       res.json(distribution);
@@ -224,38 +149,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // User routes
-  app.get('/api/users', async (req: any, res) => {
-    try {
-      let userId = 'test-admin';
-      let user = await storage.getUser(userId);
-      
-      // Production mode: use authentication
-      if (process.env.NODE_ENV !== 'development') {
-        if (!req.isAuthenticated() || !req.user?.claims?.sub) {
-          return res.status(401).json({ message: "Unauthorized" });
-        }
-        userId = req.user.claims.sub;
-        user = await storage.getUser(userId);
-      }
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
 
-      // Only admins and managers can list users
-      if (!hasPermission(user.role, "read", "team")) {
-        return res.status(403).json({ message: "Insufficient permissions" });
-      }
-
-      const { role } = req.query;
-      const users = role ? await storage.getUsersByRole(role as Role) : await storage.getUsersByRole("AGENT");
-      res.json(users);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      res.status(500).json({ message: "Failed to fetch users" });
-    }
-  });
 
   const httpServer = createServer(app);
   return httpServer;
